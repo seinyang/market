@@ -40,11 +40,14 @@ public class LoginController {
     @Operation(summary = "업체 회원가입", description = " 회원가입 할 때 사용하는 API")
 
     public ResponseEntity<User> signup(@RequestBody SignupRequest signupRequest) {
-        String email = signupRequest.getEmail();
-        String code = signupRequest.getCode();
+        // 인증 코드 생성
+        String verificationCode = generateVerificationCode();
 
-        // 사용자가 입력한 인증 코드를 검증
-        boolean isCodeValid = service.verifyCode(email, code);
+        // 이메일로 인증 코드 전송
+        service.sendVerificationCode(signupRequest.getEmail(), verificationCode);
+
+        // 사용자가 올바른 인증 코드를 입력했는지 확인
+        boolean isCodeValid = service.verifyCode(signupRequest.getEmail(), verificationCode, signupRequest.getCode());
         if (!isCodeValid) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -69,7 +72,10 @@ public class LoginController {
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-
+     //인증 코드 생성 메서드
+    private String generateVerificationCode() {
+        return String.format("%06d", new Random().nextInt(999999));
+    }
 
 }
 
