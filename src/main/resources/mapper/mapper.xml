@@ -8,4 +8,17 @@
         INSERT INTO market.user (name, id, password, birthday, email)
         VALUES (#{name}, #{id}, #{password} , #{birthday}, #{email})
     </insert>
+
+    <select id="findUserByIdAndPassword" resultType="com.example.swagger.dto.User">
+        SELECT name,id FROM market.user WHERE id = #{id} AND password = #{password} LIMIT 1
+    </select>
+
+    <select id="findUserById" resultType="com.example.swagger.dto.User">
+        SELECT id FROM market.user WHERE email = #{email}
+    </select>
+
+<!--    <insert id="findUserByPassword" parameterType="com.example.swagger.dto.User">-->
+<!--        INSERT INTO market.user password-->
+<!--        VALUES (#{id}, #{email},#{password})-->
+<!--    </insert>-->
 </mapper>

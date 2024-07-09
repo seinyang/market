@@ -1,18 +1,16 @@
 package com.example.swagger.controller;
 
 
-import com.example.swagger.dto.SignupRequest;
-import com.example.swagger.dto.User;
-import com.example.swagger.service.EmailService;
+import com.example.swagger.dto.*;
+import com.example.swagger.jwt.JwtUtil;
 import com.example.swagger.service.Service;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,31 +21,46 @@ import java.util.Random;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "인증")
+@Tag(name = "인증 ")
 public class LoginController {
 
     private final Service service;
-    private final EmailService emailService;
-
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    @Operation(summary = "업체 로그인", description = " 로그인 할 때 사용하는 API")
-    public String login() {
-        return login();
+    @Operation(summary = "로그인", description = " 로그인 할 때 사용하는 API")
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse httpResponse) {
+        String id = loginRequest.getId();
+        String password = loginRequest.getPassword();
+
+        User authenticationUser = service.authenticationLogin(id, password);
+        // 인증 성공 시 사용자 정보 반환, 실패 시 UNAUTHORIZED 반환
+        if (authenticationUser != null) {
+            String token = jwtUtil.generateToken(authenticationUser.getId());
+
+            // JWT 토큰을 쿠키에 담아서 클라이언트에게 전달
+            Cookie cookie = new Cookie("jwtToken", token);
+            cookie.setMaxAge((int) jwtUtil.getTokenValidityInSeconds()); // 쿠키 유효 기간 설정
+            cookie.setPath("/"); // 모든 경로에서 접근 가능하도록 설정
+            cookie.setHttpOnly(true); // JavaScript로 접근할 수 없도록 설정
+            httpResponse.addCookie(cookie);
+
+            return ResponseEntity.ok(new JwtResponse(token, authenticationUser));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
+
     @PostMapping("/signup")
-    @Operation(summary = "업체 회원가입", description = " 회원가입 할 때 사용하는 API")
+    @Operation(summary = "회원가입", description = " 회원가입 할 때 사용하는 API")
 
     public ResponseEntity<User> signup(@RequestBody SignupRequest signupRequest) {
-        // 인증 코드 생성
-        String verificationCode = generateVerificationCode();
+        String email = signupRequest.getEmail();
+        String code = signupRequest.getCode();
 
-        // 이메일로 인증 코드 전송
-        service.sendVerificationCode(signupRequest.getEmail(), verificationCode);
-
-        // 사용자가 올바른 인증 코드를 입력했는지 확인
-        boolean isCodeValid = service.verifyCode(signupRequest.getEmail(), verificationCode, signupRequest.getCode());
+        // 사용자가 입력한 인증 코드를 검증
+        boolean isCodeValid = service.verifySignupCode(email, code);
         if (!isCodeValid) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -62,8 +75,6 @@ public class LoginController {
 
         service.addUser(newUser);
 
-
-
         // 회원가입 성공
         String date = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
         HttpHeaders headers = new HttpHeaders();
@@ -72,12 +83,38 @@ public class LoginController {
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-     //인증 코드 생성 메서드
-    private String generateVerificationCode() {
-        return String.format("%06d", new Random().nextInt(999999));
+
+    //아이디 찾기
+    @PostMapping("/id-search")
+    @Operation(summary = "아이디 찾기", description = " 아이디찾기 할 때 사용하는 API")
+
+    public ResponseEntity<SearchIdResponse> idSearch(@RequestBody SearchIdRequest searchIdRequest) {
+        String email = searchIdRequest.getEmail();
+        String code = searchIdRequest.getCode();
+
+
+        // 사용자가 올바른 인증 코드를 입력했는지 확인
+        boolean isCodeValid = service.verifyIdCode(email, code);
+        if (!isCodeValid) {
+            System.out.println("Invalid Code for email: " + email);  // 로그 추가
+
+            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User user = service.getFindId(email);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        SearchIdResponse response = new SearchIdResponse(user.getId());
+        return ResponseEntity.ok(response);
     }
 
+
+
 }
+
+
+
 
 
 

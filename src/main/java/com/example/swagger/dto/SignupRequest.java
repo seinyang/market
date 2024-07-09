@@ -12,4 +12,6 @@ public class SignupRequest {
     private String email;
     private LocalDate birthday;
     private String code;  // 사용자가 입력한 인증 코드
+
+
 }
