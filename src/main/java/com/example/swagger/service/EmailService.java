@@ -46,7 +46,19 @@ public class EmailService {
             // 예외 처리
         }
     }
+    public void sendPasswordSearchCode(String email, String verificationCode) {
+        String subject = "비밀번호 찾기 인증코드";
+        String text = "비밀번호를 변경하시려면 아래 인증 코드를 입력해주세요:\n" + verificationCode;
+        String from = "did756984@naver.com";
 
+        try {
+            sendEmail(email, subject, text, from);
+            log.debug("이메일을 성공적으로 전송했습니다.");
+        } catch (MailException e) {
+            log.error("이메일 전송 중 오류가 발생했습니다.", e);
+            // 예외 처리
+        }
+    }
     public void sendEmail(String to, String subject, String text, String from) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -57,4 +69,6 @@ public class EmailService {
         mailSender.send(message);
 
     }
+
+
 }

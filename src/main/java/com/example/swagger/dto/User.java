@@ -11,6 +11,7 @@ import java.util.Date;
 
 @Data
 public class User {
+
     @NotBlank(message = "이름을 입력하세요.")
     public String name;
 

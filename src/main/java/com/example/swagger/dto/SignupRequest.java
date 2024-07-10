@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class SignupRequest {
+
     private String name;
     private String id;
     private String password;

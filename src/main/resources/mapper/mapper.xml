@@ -17,8 +17,15 @@
         SELECT id FROM market.user WHERE email = #{email}
     </select>
 
-<!--    <insert id="findUserByPassword" parameterType="com.example.swagger.dto.User">-->
-<!--        INSERT INTO market.user password-->
-<!--        VALUES (#{id}, #{email},#{password})-->
-<!--    </insert>-->
+    <update id="updatePassword" parameterType="map" >
+        UPDATE market.user
+        SET password = #{password}
+        WHERE id = #{id} AND email = #{email}
+    </update>
+
+    <select id="findUserByIdAndEmail" parameterType="map" resultType="com.example.swagger.dto.User">
+        SELECT * FROM market.user
+        WHERE id = #{id} AND email = #{email}
+    </select>
+
 </mapper>

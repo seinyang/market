@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -96,8 +96,6 @@ public class LoginController {
         // 사용자가 올바른 인증 코드를 입력했는지 확인
         boolean isCodeValid = service.verifyIdCode(email, code);
         if (!isCodeValid) {
-            System.out.println("Invalid Code for email: " + email);  // 로그 추가
-
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -109,6 +107,36 @@ public class LoginController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/password-search")
+    @Operation(summary = "비번 찾기", description = " 비번찾기 할 때 사용하는 API")
+
+    public ResponseEntity<PasswordResponse> idSearch(@RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+
+        String id = passwordUpdateRequest.getId();
+        String email = passwordUpdateRequest.getEmail();
+        String code = passwordUpdateRequest.getCode();
+        String newPassword = passwordUpdateRequest.getNewPassword();
+        String confirm = passwordUpdateRequest.getPasswordConfirm();
+
+        //변경할 비번 같은지 확인
+        if (!newPassword.equals(confirm)){
+             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // 사용자가 올바른 인증 코드를 입력했는지 확인
+        boolean isCodeValid = service.verifyPasswordCode(email, code);
+        if (!isCodeValid) {
+            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User user = service.passwordSearch(id,email,newPassword);
+
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        PasswordResponse response = new PasswordResponse(user.getPassword());
+        return ResponseEntity.ok(response);
+    }
 
 
 }
