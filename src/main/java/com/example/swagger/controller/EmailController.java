@@ -24,8 +24,8 @@ public class EmailController {
 
     @PostMapping("/signup/send-code")
     @Operation(summary = "회원가입 - 인증 코드 전송", description = "회원가입을 위해 이메일로 인증 코드를 전송합니다.")
-    public ResponseEntity<Void> sendSignupCode(@RequestBody User user) {
-        String email = user.getEmail();
+    public ResponseEntity<Void> sendSignupCode(@RequestBody SendEmailRequest sendEmailRequest) {
+        String email = sendEmailRequest.getEmail();
 
         // 인증 코드 생성
         String verificationCode = generateVerificationCode();

@@ -116,7 +116,7 @@ public class LoginController {
         String email = passwordUpdateRequest.getEmail();
         String code = passwordUpdateRequest.getCode();
         String newPassword = passwordUpdateRequest.getNewPassword();
-        String confirm = passwordUpdateRequest.getPasswordConfirm();
+        String confirm = passwordUpdateRequest.getPasswordCheck();
 
         //변경할 비번 같은지 확인
         if (!newPassword.equals(confirm)){

@@ -13,6 +13,6 @@ public class PasswordUpdateRequest {
 
     private String newPassword;
 
-    private String passwordConfirm;
+    private String passwordCheck;
     
 }
