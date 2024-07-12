@@ -3,7 +3,7 @@ package com.example.swagger.controller;
 
 import com.example.swagger.dto.*;
 import com.example.swagger.jwt.JwtUtil;
-import com.example.swagger.service.Service;
+import com.example.swagger.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 @Tag(name = "인증 ")
 public class LoginController {
 
-    private final Service service;
+    private final LoginService service;
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
@@ -47,7 +47,7 @@ public class LoginController {
 
             return ResponseEntity.ok(new JwtResponse(token, authenticationUser));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

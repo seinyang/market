@@ -1,9 +1,7 @@
 package com.example.swagger.controller;
 
 import com.example.swagger.dto.*;
-import com.example.swagger.service.EmailService;
-import com.example.swagger.service.Service;
-import io.swagger.v3.oas.annotations.Hidden;
+import com.example.swagger.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Random;
+import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,12 +19,22 @@ import java.util.Random;
 
 public class EmailController {
 
-    private final Service service;
+    private final LoginService service;
+
+    //이메일형식 메서드
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+            "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+            Pattern.CASE_INSENSITIVE
+    );
 
     @PostMapping("/signup/send-code")
     @Operation(summary = "회원가입 - 인증 코드 전송", description = "회원가입을 위해 이메일로 인증 코드를 전송합니다.")
     public ResponseEntity<Void> sendSignupCode(@RequestBody SendEmailRequest sendEmailRequest) {
         String email = sendEmailRequest.getEmail();
+
+        if (isValidEmail(email)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         // 인증 코드 생성
         String verificationCode = generateVerificationCode();
@@ -47,6 +56,11 @@ public class EmailController {
 
         String email = sendEmailRequest.getEmail();
 
+
+        if (isValidEmail(email)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         // 인증 코드 생성
         String verificationCode = generateVerificationCode();
 
@@ -66,8 +80,14 @@ public class EmailController {
     @PostMapping("/password-search/send-code")
     @Operation(summary = "비번 찾기  - 인증 코드 전송", description = "비번 찾기 시 이메일로 인증 코드를 전송하는 API")
     public ResponseEntity<Void> sendPasswordCode(@RequestBody PasswordRequest passwordRequest) {
+
         String id = passwordRequest.getId();
         String email = passwordRequest.getEmail();
+
+        if (isValidEmail(email)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         // 사용자가 아이디와 이메일이 일치하는지 확인
         boolean isValidUser = service.validateUser(id, email);
         if (!isValidUser) {
@@ -86,6 +106,11 @@ public class EmailController {
 
 
         return ResponseEntity.ok().build();
+    }
+
+    // 이메일 형식 검증 메서드
+    private boolean isValidEmail(String email) {
+        return !EMAIL_PATTERN.matcher(email).matches();
     }
 
     // 인증 코드 생성 메서드

@@ -11,8 +11,8 @@ import java.util.Map;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
-public class Service {
-    private static final Logger logger = LoggerFactory.getLogger(Service.class);
+public class LoginService {
+    private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
 
     public final Mapper mapper;
     private final EmailService emailService;
@@ -65,7 +65,6 @@ public class Service {
 
 
     // 비밀번호 찾기
-
     public User passwordSearch(String id, String email, String newPassword) {
         User user = mapper.findUserByIdAndEmail(id, email);
         if (user == null) {

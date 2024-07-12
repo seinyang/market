@@ -28,4 +28,9 @@
         WHERE id = #{id} AND email = #{email}
     </select>
 
+    <select id="workerHome" parameterType="com.example.swagger.dto.HomeDto"  resultType="com.example.swagger.dto.HomeDto">
+        SELECT worker,date,time,price FROM market.gada
+
+    </select>
+
 </mapper>
