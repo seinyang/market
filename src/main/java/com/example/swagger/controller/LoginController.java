@@ -2,6 +2,8 @@ package com.example.swagger.controller;
 
 
 import com.example.swagger.dto.*;
+import com.example.swagger.dto.login.JwtResponse;
+import com.example.swagger.dto.login.LoginRequest;
 import com.example.swagger.jwt.JwtUtil;
 import com.example.swagger.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -29,8 +29,11 @@
     </select>
 
     <select id="workerHome" parameterType="com.example.swagger.dto.HomeDto"  resultType="com.example.swagger.dto.HomeDto">
-        SELECT worker,date,time,price FROM market.gada
+        SELECT worker,date,time,price FROM market.home
+    </select>
 
+    <select id="workerApply" parameterType="com.example.swagger.dto.HomeDto"  resultType="com.example.swagger.dto.HomeDto">
+        SELECT workname,place,map,distance,personnal,workingin,workingout FROM market.gada
     </select>
 
 </mapper>

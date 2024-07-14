@@ -1,4 +1,4 @@
-package com.example.swagger.dto;
+package com.example.swagger.dto.login;
 
 import lombok.Data;
 

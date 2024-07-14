@@ -1,5 +1,6 @@
-package com.example.swagger.dto;
+package com.example.swagger.dto.login;
 
+import com.example.swagger.dto.User;
 import lombok.Data;
 
 @Data
@@ -12,7 +13,7 @@ public class JwtResponse {
     private String id;
 
 
-    public JwtResponse(String token,User user) {
+    public JwtResponse(String token, User user) {
 
         this.token=token;
         this.name= user.getName();
