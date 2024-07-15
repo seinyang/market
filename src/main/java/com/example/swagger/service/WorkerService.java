@@ -1,6 +1,7 @@
 package com.example.swagger.service;
 
-import com.example.swagger.dto.HomeDto;
+import com.example.swagger.dto.gada.ClickWorkDto;
+import com.example.swagger.dto.gada.HomeDto;
 import com.example.swagger.mapper.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class WorkerService {
 
     public List<HomeDto> home (){
         return mapper.workerHome();
+    }
+
+    public ClickWorkDto getWorker(int id){
+        return mapper.workerApply(id);
     }
 
 }

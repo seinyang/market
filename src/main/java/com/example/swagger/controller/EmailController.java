@@ -1,6 +1,7 @@
 package com.example.swagger.controller;
 
-import com.example.swagger.dto.*;
+import com.example.swagger.dto.password.PasswordRequest;
+import com.example.swagger.dto.signup.SendEmailRequest;
 import com.example.swagger.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

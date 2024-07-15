@@ -1,7 +1,8 @@
 package com.example.swagger.mapper;
 
-import com.example.swagger.dto.User;
-import com.example.swagger.dto.HomeDto;
+import com.example.swagger.dto.gada.ClickWorkDto;
+import com.example.swagger.dto.signup.User;
+import com.example.swagger.dto.gada.HomeDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,5 +21,7 @@ public interface Mapper {
     User findUserByIdAndEmail(@Param("id") String id, @Param("email") String email);
 
     List<HomeDto> workerHome();
+
+    ClickWorkDto workerApply(int id);
 
 }

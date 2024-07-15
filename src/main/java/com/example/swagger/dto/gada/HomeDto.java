@@ -1,4 +1,4 @@
-package com.example.swagger.dto;
+package com.example.swagger.dto.gada;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.util.Date;
 @Data
 public class HomeDto {
+
+    private int id;
 
     private String worker;
 

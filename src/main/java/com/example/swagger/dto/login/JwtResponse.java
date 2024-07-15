@@ -1,6 +1,6 @@
 package com.example.swagger.dto.login;
 
-import com.example.swagger.dto.User;
+import com.example.swagger.dto.signup.User;
 import lombok.Data;
 
 @Data

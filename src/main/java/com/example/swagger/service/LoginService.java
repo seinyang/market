@@ -1,6 +1,6 @@
 package com.example.swagger.service;
 
-import com.example.swagger.dto.User;
+import com.example.swagger.dto.signup.User;
 import com.example.swagger.mapper.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
