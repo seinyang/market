@@ -6,6 +6,8 @@ import java.time.LocalTime;
 
 @Data
 public class ClickWorkDto {
+
+
     private String workName;
 
 
@@ -20,8 +22,8 @@ public class ClickWorkDto {
     private Integer personnal;
 
 
-    private LocalTime workingIn;
+    private String workingIn;
 
 
-    private LocalTime workingOut;
+    private String workingOut;
 }

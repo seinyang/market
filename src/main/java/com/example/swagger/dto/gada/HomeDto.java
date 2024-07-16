@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 public class HomeDto {
 
-    private int id;
+    private int homeId;
 
     private String worker;
 

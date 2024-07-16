@@ -1,6 +1,7 @@
 package com.example.swagger.mapper;
 
 import com.example.swagger.dto.gada.ClickWorkDto;
+import com.example.swagger.dto.gada.SendInfo;
 import com.example.swagger.dto.signup.User;
 import com.example.swagger.dto.gada.HomeDto;
 import org.apache.ibatis.annotations.Param;
@@ -22,6 +23,8 @@ public interface Mapper {
 
     List<HomeDto> workerHome();
 
-    ClickWorkDto workerApply(int id);
+    ClickWorkDto workerApply(int homeId);
+
+    SendInfo sendInfo(String name);
 
 }

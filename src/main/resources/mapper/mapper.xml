@@ -33,23 +33,16 @@
     </select>
 
     <select id="workerApply" parameterType="int" resultType="com.example.swagger.dto.gada.ClickWorkDto">
---         SELECT workname, place, map, distance, personnal, workingin, workingout
---         FROM market.gada
---         WHERE id = #{id}
-        SELECT
-            g.workname,
-            g.place,
-            g.map ,
-            g.distance,
-            g.personnal,
-            g.workingin,
-            g.workingout
-        FROM
-            market.gada g
-                JOIN
-            market.home h ON h.id = g.home_id
-        WHERE
-            g.home_id = #{id}
+        SELECT workname, place, map , distance, personnal, workingin, workingout
+        FROM market.gada
+        WHERE home_id = #{homeId}  -- home_id를 파라미터로 사용
+    </select>
+
+    <select id="sendInfo" resultType="com.example.swagger.dto.gada.SendInfo">
+        SELECT u.name, u.phone, u.birthday, mp.certification
+        FROM market.user u
+        LEFT JOIN market.mypage mp ON u.id = mp.user_id
+        WHERE u.name = #{name}
     </select>
 
 </mapper>
