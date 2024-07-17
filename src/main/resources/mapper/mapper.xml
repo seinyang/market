@@ -39,10 +39,12 @@
     </select>
 
     <select id="sendInfo" resultType="com.example.swagger.dto.gada.SendInfo">
-        SELECT u.name, u.phone, u.birthday, mp.certification
+        SELECT u.name, u.phone AS phoneNumber, u.birthday, mp.certification
         FROM market.user u
         LEFT JOIN market.mypage mp ON u.id = mp.user_id
         WHERE u.name = #{name}
     </select>
+
+
 
 </mapper>

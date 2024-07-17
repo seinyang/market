@@ -42,7 +42,7 @@ public class WorkerController {
 
     @Operation(summary = "지원하기", description = "지원하기 클릭했을때의 API")
     @PostMapping("/apply")
-    public ResponseEntity<ClickWorkDto> getWorker(@RequestBody SendInfo sendInfo){
+    public ResponseEntity<SendInfo> getWorker(@RequestBody SendInfo sendInfo){
         System.out.println(sendInfo); // 디버깅용
 
         // 인증서 여부 체크
@@ -50,7 +50,7 @@ public class WorkerController {
             return ResponseEntity.status(403).body(null); // 403 Forbidden
         }
 
-        ClickWorkDto applyData = workerService.apply(String.valueOf(sendInfo));
+        SendInfo applyData = workerService.apply(sendInfo.getName());
 
         if (applyData == null) {
             return ResponseEntity.badRequest().body(null); // 400 Bad Request

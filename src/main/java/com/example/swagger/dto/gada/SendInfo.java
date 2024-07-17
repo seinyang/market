@@ -5,9 +5,9 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
-@EqualsAndHashCode(callSuper = true)
+
 @Data
-public class SendInfo extends ClickWorkDto {
+public class SendInfo  {
 
     private String name;
 
