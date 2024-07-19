@@ -1,21 +1,22 @@
 package com.example.swagger.dto.gada;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 
 @Data
-public class SendInfo  {
+public class UserInfoDto {
 
     private String name;
 
+    private String id;
 
     private String phoneNumber;
 
 
-    private LocalDate birthday;
+    private Date birthday;
 
     private boolean certification;
 }

@@ -1,8 +1,6 @@
 package com.example.swagger.controller;
 
-import com.example.swagger.dto.gada.ClickWorkDto;
-import com.example.swagger.dto.gada.HomeDto;
-import com.example.swagger.dto.gada.SendInfo;
+import com.example.swagger.dto.gada.*;
 import com.example.swagger.service.WorkerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,20 +40,55 @@ public class WorkerController {
 
     @Operation(summary = "지원하기", description = "지원하기 클릭했을때의 API")
     @PostMapping("/apply")
-    public ResponseEntity<SendInfo> getWorker(@RequestBody SendInfo sendInfo){
-        System.out.println(sendInfo); // 디버깅용
+    public ResponseEntity<SupportResponse> getWorker(@RequestParam("userId") String userId, @RequestParam("homeId") int homeId){
 
-        // 인증서 여부 체크
-        if (!sendInfo.isCertification()) {  // certification이 false일 경우
-            return ResponseEntity.status(403).body(null); // 403 Forbidden
+        try {
+            workerService.applySupport(userId, homeId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("User not found")) {
+                return ResponseEntity.status(404).build();
+            } else if (e.getMessage().equals("User is not certified")) {
+                return ResponseEntity.status(403).build();
+            } else if (e.getMessage().equals("User has already applied for this homeId")) {
+                return ResponseEntity.status(409).build();
+            } else {
+                return ResponseEntity.status(500).build();
+            }
+        }
+    }
+
+    @Operation(summary = "지원내역", description = "지원내역의 API")
+    @GetMapping("/support")
+    public ResponseEntity<List<SupportResponse>> getSupport(@RequestParam("userName") String userName){
+
+        if (userName.isEmpty()){
+            return ResponseEntity.status(400).body(null); // 403 Forbidden
+        }
+        List<SupportResponse> supportList = workerService.support(userName);
+
+        if (supportList.isEmpty()) {
+            return ResponseEntity.status(404).body(null); // 404 Not Found
         }
 
-        SendInfo applyData = workerService.apply(sendInfo.getName());
+        return ResponseEntity.ok(supportList);
+    }
 
-        if (applyData == null) {
-            return ResponseEntity.badRequest().body(null); // 400 Bad Request
+    @Operation(summary = "마이페이지 조회", description = "사용자의 마이페이지 정보를 조회하는 API")
+    @GetMapping("/mypage")
+    public ResponseEntity<MyPageDTO> getMyPage(@RequestParam("userName") String userName) {
+        if ((userName.isEmpty())){
+            return ResponseEntity.status(400).body(null); // 403 Forbidden
         }
-
-        return ResponseEntity.ok(applyData); // 200 OK
+        try {
+            MyPageDTO myPageInfo = workerService.getMyPage(userName);
+            return ResponseEntity.ok(myPageInfo);
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("User not found")) {
+                return ResponseEntity.status(404).build(); // 404 Not Found
+            } else {
+                return ResponseEntity.status(500).build(); // 500 Internal Server Error
+            }
+        }
     }
 }

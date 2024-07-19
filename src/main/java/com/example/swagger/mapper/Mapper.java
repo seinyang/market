@@ -1,9 +1,7 @@
 package com.example.swagger.mapper;
 
-import com.example.swagger.dto.gada.ClickWorkDto;
-import com.example.swagger.dto.gada.SendInfo;
+import com.example.swagger.dto.gada.*;
 import com.example.swagger.dto.signup.User;
-import com.example.swagger.dto.gada.HomeDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -22,9 +20,16 @@ public interface Mapper {
     User findUserByIdAndEmail(@Param("id") String id, @Param("email") String email);
 
     List<HomeDto> workerHome();
-
+    //일자리 클릭
     ClickWorkDto workerApply(int homeId);
+    //사용자 확인(인증서 유무)
+    UserInfoDto getUserInfo(String userId);
+    //사용자 확인후 지원하기
+    void SendUserInfo(SupportRequsest supportRequsest);
+    //지원내역
+    List<SupportResponse> Support(String userName);
 
-    SendInfo sendInfo(String name);
+    //마이페이지
+    MyPageDTO MyPage(String userName);
 
 }

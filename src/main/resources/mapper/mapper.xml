@@ -38,13 +38,78 @@
         WHERE home_id = #{homeId}  -- home_id를 파라미터로 사용
     </select>
 
-    <select id="sendInfo" resultType="com.example.swagger.dto.gada.SendInfo">
-        SELECT u.name, u.phone AS phoneNumber, u.birthday, mp.certification
-        FROM market.user u
-        LEFT JOIN market.mypage mp ON u.id = mp.user_id
-        WHERE u.name = #{name}
+    <select id="getUserInfo" resultType="com.example.swagger.dto.gada.UserInfoDto">
+        SELECT
+            u.name,
+            u.id,
+            u.birthday,
+            u.phone AS phoneNumber,
+            mp.certification
+        FROM
+            market.user u
+                LEFT JOIN
+            market.mypage mp ON u.id = mp.user_id
+        WHERE
+            u.id = #{userId};
     </select>
 
 
+    <insert id="SendUserInfo" parameterType="com.example.swagger.dto.gada.SupportRequsest">
+        INSERT INTO market.support (
+            user_name, phone_number, birthday, certification, work_name, place, map, distance, personnel, working_in, working_out
+        )
+        SELECT
+            #{userName},
+            #{phoneNumber},
+            #{birthday},
+            #{certification},
+            g.workname,
+            g.place,
+            g.map,
+            g.distance,
+            g.personnal,
+            g.workingin,
+            g.workingout
+        FROM market.gada g
+        WHERE g.home_id = #{homeId}
+          AND NOT EXISTS (
+            SELECT 1 FROM market.support s
+            WHERE s.user_name = #{userName} AND s.id = #{homeId}
+        );
+    </insert>
+
+    <select id="Support" resultType="com.example.swagger.dto.gada.SupportResponse">
+        SELECT
+            u.name AS userName,
+            u.phone AS phoneNumber,
+            u.birthday,
+            mp.certification,
+            s.work_name AS workName,
+            s.place,
+            s.map,
+            s.distance,
+            s.personnel,
+            s.working_in AS workingIn,
+            s.working_out AS workingOut
+        FROM market.user u
+                 LEFT JOIN market.mypage mp ON u.id = mp.user_id
+                 INNER JOIN market.support s ON u.name = s.user_name
+        WHERE u.name = #{userName};
+    </select>
+
+
+    <select id="MyPage" resultType="com.example.swagger.dto.gada.MyPageDTO">
+        SELECT
+            u.id,
+            mp.certification,
+            mp.completion,
+            mp.testimonial
+        FROM
+            market.user u
+                JOIN
+            market.mypage mp ON u.id = mp.user_id
+        WHERE
+            u.name = #{userName};
+    </select>
 
 </mapper>
