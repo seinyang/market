@@ -1,1 +1,2 @@
 web: java -Dserver.port=$PORT -jar build/libs/web.jar
+java.runtime.version=17
