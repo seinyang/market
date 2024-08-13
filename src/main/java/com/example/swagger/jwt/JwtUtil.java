@@ -33,7 +33,6 @@ public class JwtUtil {
                 .compact();
     }
 
-
     public Claims extractClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
