@@ -100,11 +100,8 @@ public class EmailController {
         //이메일로 인증 코드 전송
         service.sendPasswordSearchCode(email, verificationCode);
 
-
         //인증 코드 저장
         service.storeVerificationCode(email, verificationCode);
-
-
 
         return ResponseEntity.ok().build();
     }
